@@ -1,0 +1,14 @@
+package org.kaminodroid.backend.entities;
+
+public abstract class Entity {
+
+    private String guid;
+
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
+    }
+}

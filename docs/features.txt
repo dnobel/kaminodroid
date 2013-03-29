@@ -1,0 +1,16 @@
+Features:
+	
+	- Verwaltung von Applikationen
+	- Upload von Applikationen
+	
+	- Liste von Applikationen
+	- Detailansicht einer Applikation
+	- QR-Code und Link zum Download
+	
+	- Authorisierung mit Userverwaltung
+	- Mail-Versand mit Link
+	- Android-App mit Push-Notification
+	
+	- Java-Client-Library
+	- Maven-Plugin
+	- Jenkins-Plugin
