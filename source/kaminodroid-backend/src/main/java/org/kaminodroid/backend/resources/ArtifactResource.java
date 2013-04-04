@@ -22,31 +22,47 @@ import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 @Consumes({ MediaType.APPLICATION_JSON })
 public class ArtifactResource extends AbstractResource {
 
-	@POST
-	public String create(@PathParam("applicationUUid") String applicationUuid, Artifact artifact) {
-		List<Application> applications = getDatabase().query(
-				new OSQLSynchQuery<Artifact>("select * from " + Application.class.getSimpleName() + " where uuid = ?"),
-				applicationUuid);
-		if (applications.size() == 1) {
-			Application application = applications.get(0);
-			artifact.setUuid(UUID.randomUUID().toString());
-			artifact.setApplication(application);
-			getDatabase().save(artifact);
-			return artifact.getUuid();
-		}
+    @POST
+    public String create(@PathParam("applicationUUid") String applicationUuid, Artifact artifact) {
+        Application application = getApplication(applicationUuid);
+        if (application != null) {
 
-		return null;
-	}
+            artifact.setUuid(UUID.randomUUID().toString());
 
-	@GET
-	public List<Artifact> getAll(@PathParam("applicationUUid") String applicationUuid) {
-		List<Artifact> artifacts = Lists.newArrayList();
-		List<Artifact> databaseArtifacts = getDatabase().query(
-				new OSQLSynchQuery<Artifact>("select * from " + Artifact.class.getSimpleName()
-						+ " where application.uuid = ?"), applicationUuid);
-		for (Artifact artifact : databaseArtifacts) {
-			artifacts.add((Artifact) getDatabase().detachAll(artifact, true));
-		}
-		return artifacts;
-	}
+            application.getArtifacts().add(artifact);
+
+            getDatabase().save(application);
+
+            return artifact.getUuid();
+        }
+
+        return null;
+    }
+
+    @GET
+    public List<Artifact> getAll(@PathParam("applicationUUid") String applicationUuid) {
+
+        List<Artifact> artifacts = Lists.newArrayList();
+
+        Application application = getApplication(applicationUuid);
+
+        for (Artifact artifact : application.getArtifacts()) {
+            artifacts.add((Artifact) getDatabase().detachAll(artifact, true));
+        }
+
+        return artifacts;
+    }
+
+    private Application getApplication(String applicationUuid) {
+        List<Application> applications = getDatabase().query(
+                new OSQLSynchQuery<Artifact>("select * from " + Application.class.getSimpleName() + " where uuid = ?"),
+                applicationUuid);
+        if (!applications.isEmpty()) {
+            return applications.get(0);
+        }
+        else {
+            return null;
+        }
+
+    }
 }

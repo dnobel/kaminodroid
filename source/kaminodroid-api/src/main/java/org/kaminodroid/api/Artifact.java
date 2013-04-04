@@ -1,45 +1,33 @@
 package org.kaminodroid.api;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 public class Artifact extends Entity implements Comparable<Artifact> {
 
-	public String version;
+    public String version;
 
-	private String downloadUrl;
+    private String downloadUrl;
 
-	@JsonIgnore
-	private Application application;
+    public int compareTo(Artifact anotherArtifact) {
+        DefaultArtifactVersion artifactVersion1 = new DefaultArtifactVersion(this.getVersion());
+        DefaultArtifactVersion artifactVersion2 = new DefaultArtifactVersion(anotherArtifact.getVersion());
+        return artifactVersion1.compareTo(artifactVersion2);
+    }
 
-	public Application getApplication() {
-		return application;
-	}
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
 
-	public void setApplication(Application application) {
-		this.application = application;
-	}
+    public String getVersion() {
+        return version;
+    }
 
-	public String getDownloadUrl() {
-		return downloadUrl;
-	}
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
+    }
 
-	public String getVersion() {
-		return version;
-	}
-
-	public void setDownloadUrl(String downloadUrl) {
-		this.downloadUrl = downloadUrl;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	public int compareTo(Artifact anotherArtifact) {
-		DefaultArtifactVersion artifactVersion1 = new DefaultArtifactVersion(this.getVersion());
-		DefaultArtifactVersion artifactVersion2 = new DefaultArtifactVersion(anotherArtifact.getVersion());
-		return artifactVersion1.compareTo(artifactVersion2);
-	}
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
 }

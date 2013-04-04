@@ -4,40 +4,43 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import com.google.common.collect.Lists;
 
 public class Application extends Entity {
 
-	private List<Artifact> artifacts;
-	private String name;
+    private List<Artifact> artifacts;
+    private String name;
 
-	public Application() {
-		artifacts = Lists.newArrayList();
-	}
+    public Application() {
+        artifacts = Lists.newArrayList();
+    }
 
-	public List<Artifact> getArtifacts() {
-		return artifacts;
-	}
+    public List<Artifact> getArtifacts() {
+        return artifacts;
+    }
 
-	public String getName() {
-		return name;
-	}
+    @JsonIgnore
+    public Artifact getLatestArtifact() {
+        if (getArtifacts() != null && !getArtifacts().isEmpty()) {
+            ArrayList<Artifact> artifacts = Lists.newArrayList(getArtifacts());
+            Collections.sort(artifacts);
+            return artifacts.get(0);
+        }
+        return null;
+    }
 
-	public Artifact getLatestArtifact() {
-		if (getArtifacts() != null && getArtifacts().isEmpty()) {
-			ArrayList<Artifact> artifacts = Lists.newArrayList(getArtifacts());
-			Collections.sort(artifacts);
-			return artifacts.get(0);
-		}
-		return null;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setArtifacts(List<Artifact> artifacts) {
-		this.artifacts = artifacts;
-	}
+    public void setArtifacts(List<Artifact> artifacts) {
+        this.artifacts = artifacts;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
 }
