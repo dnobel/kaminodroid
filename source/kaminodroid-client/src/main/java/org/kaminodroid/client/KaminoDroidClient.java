@@ -17,31 +17,46 @@ import com.sun.jersey.api.json.JSONConfiguration;
 
 public class KaminoDroidClient {
 
-	private final Client client;
-	private final String restUrl;
+    public static void main(String[] args) {
+        KaminoDroidClient kaminoDroidClient = new KaminoDroidClient("http://localhost:8080/rest/");
+        System.out.println(kaminoDroidClient.getApplications());
+    }
 
-	public KaminoDroidClient(String restUrl) {
-		this.restUrl = restUrl;
-		ClientConfig clientConfig = new DefaultClientConfig();
-		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		client = Client.create(clientConfig);
-	}
+    private final Client client;
 
-	public List<Application> getApplications() {
-		WebResource webResource = client.resource(restUrl + "applications");
+    private final String restUrl;
 
-		ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+    public KaminoDroidClient(String restUrl) {
+        this.restUrl = restUrl;
+        ClientConfig clientConfig = new DefaultClientConfig();
+        clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        client = Client.create(clientConfig);
+    }
 
-		if (response.getStatus() != Status.OK.getStatusCode()) {
-			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-		}
+    public Application getApplication(String uuid) {
+        WebResource webResource = client.resource(restUrl + "applications/" + uuid);
 
-		return response.getEntity(new GenericType<List<Application>>() {
-		});
-	}
+        ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 
-	public static void main(String[] args) {
-		KaminoDroidClient kaminoDroidClient = new KaminoDroidClient("http://localhost:8080/rest/");
-		System.out.println(kaminoDroidClient.getApplications());
-	}
+        checkResponse(response);
+
+        return response.getEntity(Application.class);
+    }
+
+    public List<Application> getApplications() {
+        WebResource webResource = client.resource(restUrl + "applications");
+
+        ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+
+        checkResponse(response);
+
+        return response.getEntity(new GenericType<List<Application>>() {
+        });
+    }
+
+    private void checkResponse(ClientResponse response) {
+        if (response.getStatus() != Status.OK.getStatusCode()) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+        }
+    }
 }
