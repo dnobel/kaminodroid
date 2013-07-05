@@ -12,47 +12,39 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.kaminodroid.api.Application;
-import org.kaminodroid.backend.entitymanagers.EntityManager;
-
-import com.google.common.collect.Lists;
+import org.kaminodroid.backend.em.EntityManager;
+import org.kaminodroid.backend.em.OrientDbEntityManager;
 
 @Path("applications")
 @Produces({ MediaType.APPLICATION_JSON })
 @Consumes({ MediaType.APPLICATION_JSON })
 public class ApplicationResource extends AbstractResource {
 
-    @POST
-    public String create(Application application) {
-        application.setUuid(UUID.randomUUID().toString());
-        getDatabase().save(application);
-        return application.getUuid();
-    }
+	private final EntityManager<Application> entityManager;
 
-    @GET
-    public List<Application> getAll() {
-        List<Application> detachedApplications = Lists.newArrayList();
-        List<Application> applications = getEntityManager().getAll();
+	public ApplicationResource() {
+		entityManager = createEntityManager();
+	}
 
-        for (Application application : applications) {
-            detachedApplications.add((Application) getDatabase().detachAll(application, true));
-        }
+	@POST
+	public String create(Application application) {
+		application.setUuid(UUID.randomUUID().toString());
+		getDatabase().save(application);
+		return application.getUuid();
+	}
 
-        return detachedApplications;
-    }
+	@GET
+	public List<Application> getAll() {
+		return this.entityManager.getAll();
+	}
 
-    @GET
-    @Path("/{applicationUUid}")
-    public Application getById(@PathParam("applicationUUid") String applicationUuid) {
-        Application application = getEntityManager().getById(applicationUuid);
-        if (application != null) {
-            return getDatabase().detachAll(application, true);
-        }
-        else {
-            return null;
-        }
-    }
+	@GET
+	@Path("/{applicationUUid}")
+	public Application getById(@PathParam("applicationUUid") String applicationUuid) {
+		return this.entityManager.getById(applicationUuid);
+	}
 
-    private EntityManager<Application> getEntityManager() {
-        return EntityManager.forEntityType(Application.class, getDatabase());
-    }
+	private EntityManager<Application> createEntityManager() {
+		return OrientDbEntityManager.forEntityType(Application.class, getDatabase());
+	}
 }
