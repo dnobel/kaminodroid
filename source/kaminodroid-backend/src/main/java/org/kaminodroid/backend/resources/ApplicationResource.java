@@ -1,7 +1,6 @@
 package org.kaminodroid.backend.resources;
 
 import java.util.List;
-import java.util.UUID;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -20,31 +19,29 @@ import org.kaminodroid.backend.em.OrientDbEntityManager;
 @Consumes({ MediaType.APPLICATION_JSON })
 public class ApplicationResource extends AbstractResource {
 
-	private final EntityManager<Application> entityManager;
+    private final EntityManager<Application> entityManager;
 
-	public ApplicationResource() {
-		entityManager = createEntityManager();
-	}
+    public ApplicationResource() {
+        entityManager = createEntityManager();
+    }
 
-	@POST
-	public String create(Application application) {
-		application.setUuid(UUID.randomUUID().toString());
-		getDatabase().save(application);
-		return application.getUuid();
-	}
+    @POST
+    public void create(Application application) {
+        getDatabase().save(application);
+    }
 
-	@GET
-	public List<Application> getAll() {
-		return this.entityManager.getAll();
-	}
+    @GET
+    public List<Application> getAll() {
+        return this.entityManager.getAll();
+    }
 
-	@GET
-	@Path("/{applicationUUid}")
-	public Application getById(@PathParam("applicationUUid") String applicationUuid) {
-		return this.entityManager.getById(applicationUuid);
-	}
+    @GET
+    @Path("/{applicationId}")
+    public Application getById(@PathParam("applicationId") String applicationId) {
+        return this.entityManager.getById(applicationId);
+    }
 
-	private EntityManager<Application> createEntityManager() {
-		return OrientDbEntityManager.forEntityType(Application.class, getDatabase());
-	}
+    private EntityManager<Application> createEntityManager() {
+        return OrientDbEntityManager.forEntityType(Application.class, getDatabase());
+    }
 }

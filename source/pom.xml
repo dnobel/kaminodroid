@@ -13,6 +13,7 @@
         <module>kaminodroid-api</module>
         <module>kaminodroid-client</module>
 		<module>kaminodroid-backend</module>
+		<module>kaminodroid-mojo</module>
     </modules>
 
 </project>

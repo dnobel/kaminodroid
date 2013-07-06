@@ -20,11 +20,6 @@ public class KaminoDroidClient {
 
     private static final String APPLICATIONS_RESOURCE = "applications";
 
-	public static void main(String[] args) {
-        KaminoDroidClient kaminoDroidClient = new KaminoDroidClient("http://localhost:8080/rest/");
-        System.out.println(kaminoDroidClient.getApplications());
-    }
-
     private final Client client;
 
     private final String restUrl;
@@ -36,48 +31,47 @@ public class KaminoDroidClient {
         client = Client.create(clientConfig);
     }
 
+    public void createApplication(Application application) {
+        WebResource webResource = client.resource(getApplicationResourceUrl());
+        webResource.entity(application, MediaType.APPLICATION_JSON).post();
+    }
+
+    public void createArtifact(String applicationId, Artifact artifact) {
+        WebResource webResource = client.resource(getApplicationResourceUrl() + "/" + applicationId + "/artifacts");
+        webResource.entity(artifact, MediaType.APPLICATION_JSON).post();
+    }
+
     public Application getApplication(String uuid) {
-		WebResource webResource = client.resource(getApplicationResourceUrl() + "/" + uuid);
+        WebResource webResource = client.resource(getApplicationResourceUrl() + "/" + uuid);
 
         ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+        if (response.getStatus() == Status.NO_CONTENT.getStatusCode()) {
+            return null;
+        }
 
         checkResponse(response);
 
         return response.getEntity(Application.class);
     }
 
-	public void createApplication(Application application) {
-
-		WebResource webResource = client.resource(getApplicationResourceUrl());
-
-		webResource.accept(MediaType.APPLICATION_JSON).post(application);
-	}
-
-	public void createArtifact(String applicationUuid, Artifact artifact) {
-
-		WebResource webResource = client.resource(getApplicationResourceUrl() + "/" + applicationUuid + "/artficats");
-
-		webResource.accept(MediaType.APPLICATION_JSON).post(artifact);
-	}
-
     public List<Application> getApplications() {
         WebResource webResource = client.resource(getApplicationResourceUrl());
 
         ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
-
         checkResponse(response);
 
         return response.getEntity(new GenericType<List<Application>>() {
         });
     }
 
-	private String getApplicationResourceUrl() {
-		return restUrl + APPLICATIONS_RESOURCE;
-	}
 
     private void checkResponse(ClientResponse response) {
         if (response.getStatus() != Status.OK.getStatusCode()) {
             throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
         }
+    }
+
+    private String getApplicationResourceUrl() {
+        return restUrl + APPLICATIONS_RESOURCE;
     }
 }

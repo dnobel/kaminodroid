@@ -1,7 +1,7 @@
 package org.kaminodroid.backend.resources;
 
+import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -17,23 +17,27 @@ import org.kaminodroid.api.Artifact;
 import com.google.common.collect.Lists;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 
-@Path("applications/{applicationUUid}/artifacts")
+@Path("applications/{applicationId}/artifacts")
 @Produces({ MediaType.APPLICATION_JSON })
 @Consumes({ MediaType.APPLICATION_JSON })
 public class ArtifactResource extends AbstractResource {
 
     @POST
-    public String create(@PathParam("applicationUUid") String applicationUuid, Artifact artifact) {
-        Application application = getApplication(applicationUuid);
+    public String create(@PathParam("applicationId") String applicationId, Artifact artifact) {
+        Application application = getApplication(applicationId);
         if (application != null) {
 
-            artifact.setUuid(UUID.randomUUID().toString());
+            if (artifact.getId() == null) {
+                artifact.setId(application.getId() + ":" + artifact.getVersion());
+            }
+
+            artifact.setDate(new Date());
 
             application.getArtifacts().add(artifact);
 
             getDatabase().save(application);
 
-            return artifact.getUuid();
+            return artifact.getId();
         }
 
         return null;
@@ -53,10 +57,10 @@ public class ArtifactResource extends AbstractResource {
         return artifacts;
     }
 
-    private Application getApplication(String applicationUuid) {
+    private Application getApplication(String applicationId) {
         List<Application> applications = getDatabase().query(
-                new OSQLSynchQuery<Artifact>("select * from " + Application.class.getSimpleName() + " where uuid = ?"),
-                applicationUuid);
+                new OSQLSynchQuery<Artifact>("select * from " + Application.class.getSimpleName() + " where id = ?"),
+                applicationId);
         if (!applications.isEmpty()) {
             return applications.get(0);
         }

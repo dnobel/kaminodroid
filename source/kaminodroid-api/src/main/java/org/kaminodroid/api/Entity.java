@@ -2,13 +2,13 @@ package org.kaminodroid.api;
 
 public abstract class Entity {
 
-	private String uuid;
+    private String id;
 
-	public String getUuid() {
-		return uuid;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 }
