@@ -1,5 +1,5 @@
-define([ 'jquery', 'underscore', 'backbone', 'text!templates/ApplicationListItem.html' ],
-		function($, _, Backbone, template) {
+define([ 'jquery', 'underscore', 'backbone', 'text!templates/ApplicationListItem.html', 'utils/Utils' ],
+		function($, _, Backbone, template, Utils) {
 
 			'use strict';
 
@@ -16,7 +16,9 @@ define([ 'jquery', 'underscore', 'backbone', 'text!templates/ApplicationListItem
 				},
 
 				render : function() {
-					$(this.el).html($(this.template(this.model.toJSON())).children());
+					var vars = this.model.toJSON();
+					vars.latestArtifact.formattedDate = Utils.formatDate(vars.latestArtifact.date);
+					$(this.el).html($(this.template(vars)).children());
 					return this.$el;
 				},
 			});

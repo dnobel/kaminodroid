@@ -11,39 +11,49 @@ import com.google.common.collect.Lists;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Application extends Entity {
 
-    private List<Artifact> artifacts;
+	private List<Artifact> artifacts;
 
-    private String name;
+	private String description;
 
-    public Application() {
-        artifacts = Lists.newArrayList();
-    }
+	private String name;
 
-    public List<Artifact> getArtifacts() {
-        ArrayList<Artifact> artifacts = Lists.newArrayList(this.artifacts);
-        Collections.sort(artifacts);
-        Collections.reverse(artifacts);
-        return artifacts;
-    }
+	public Application() {
+		artifacts = Lists.newArrayList();
+	}
 
-    public Artifact getLatestArtifact() {
-        List<Artifact> artifacts = getArtifacts();
-        if (!artifacts.isEmpty()) {
-            return artifacts.get(0);
-        }
-        return null;
-    }
+	public List<Artifact> getArtifacts() {
+		ArrayList<Artifact> artifacts = Lists.newArrayList(this.artifacts);
+		Collections.sort(artifacts);
+		Collections.reverse(artifacts);
+		return artifacts;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setArtifacts(List<Artifact> artifacts) {
-        this.artifacts = artifacts;
-    }
+	public Artifact getLatestArtifact() {
+		List<Artifact> artifacts = getArtifacts();
+		if (!artifacts.isEmpty()) {
+			return artifacts.get(0);
+		}
+		return null;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
+
+	public void setArtifacts(List<Artifact> artifacts) {
+		this.artifacts = artifacts;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 }

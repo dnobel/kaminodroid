@@ -51,6 +51,7 @@ public class KaminoDroidMojo extends AbstractMojo {
 
             application = new Application();
             application.setId(applicationId);
+			application.setDescription(mavenProject.getDescription());
             application.setName(mavenProject.getName());
             client.createApplication(application);
         }
