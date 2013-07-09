@@ -14,6 +14,7 @@
         <module>kaminodroid-client</module>
 		<module>kaminodroid-backend</module>
 		<module>kaminodroid-mojo</module>
+		<module>kaminodroid-standalone</module>
     </modules>
 
 </project>

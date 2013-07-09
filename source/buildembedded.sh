@@ -1,0 +1,1 @@
+mvn -f kaminodroid-backend/pom.xml clean install -Pembedded

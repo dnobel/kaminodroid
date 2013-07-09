@@ -1,0 +1,1 @@
+mvn -f kaminodroid-api/pom.xml clean install org.kaminodroid:kaminodroid-mojo:kamino -Dkamino.url=http://localhost:8080
