@@ -15,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 
 public class KaminoDroidArtifactUploader {
 
+    private final static String NEWLINE = "\r\n";
     private final String fileUploadUrl;
 
     public KaminoDroidArtifactUploader(String fileUploadUrl) {
@@ -32,12 +33,13 @@ public class KaminoDroidArtifactUploader {
             OutputStream outputStream = connection.getOutputStream();
             writer = new PrintWriter(new OutputStreamWriter(outputStream), true);
 
-            writer.println("--" + boundary);
-            writer.println("Content-Disposition: form-data; name=\"fileToUpload\"; filename=\""
+            printLine(writer, "--" + boundary);
+            printLine(writer,
+                    "Content-Disposition: form-data; name=\"fileToUpload\"; filename=\""
                     + fileToUpload.getName() + "\"");
-            writer.println("Content-Type: " + URLConnection.guessContentTypeFromName(fileToUpload.getName()));
-            writer.println("Content-Transfer-Encoding: binary");
-            writer.println();
+            printLine(writer, "Content-Type: " + URLConnection.guessContentTypeFromName(fileToUpload.getName()));
+            printLine(writer, "Content-Transfer-Encoding: binary");
+            printLine(writer);
 
             InputStream is = new FileInputStream(fileToUpload);
             try {
@@ -51,8 +53,8 @@ public class KaminoDroidArtifactUploader {
             finally {
                 is.close();
             }
-            writer.println();
-            writer.println("--" + boundary + "--");
+            printLine(writer);
+            printLine(writer, "--" + boundary + "--");
         }
         finally {
             if (writer != null) {
@@ -61,6 +63,15 @@ public class KaminoDroidArtifactUploader {
         }
 
         return IOUtils.toString(((HttpURLConnection) connection).getInputStream());
+    }
+
+    private void printLine(PrintWriter writer) {
+        writer.print(NEWLINE);
+    }
+
+    private void printLine(PrintWriter writer, String string) {
+        writer.print(string);
+        writer.print(NEWLINE);
     }
 
 }
