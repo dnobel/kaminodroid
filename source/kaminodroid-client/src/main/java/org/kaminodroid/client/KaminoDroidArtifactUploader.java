@@ -36,7 +36,7 @@ public class KaminoDroidArtifactUploader {
             printLine(writer, "--" + boundary);
             printLine(writer,
                     "Content-Disposition: form-data; name=\"fileToUpload\"; filename=\""
-                    + fileToUpload.getName() + "\"");
+                            + fileToUpload.getName() + "\"");
             printLine(writer, "Content-Type: " + URLConnection.guessContentTypeFromName(fileToUpload.getName()));
             printLine(writer, "Content-Transfer-Encoding: binary");
             printLine(writer);
@@ -67,11 +67,13 @@ public class KaminoDroidArtifactUploader {
 
     private void printLine(PrintWriter writer) {
         writer.print(NEWLINE);
+        writer.flush();
     }
 
     private void printLine(PrintWriter writer, String string) {
         writer.print(string);
         writer.print(NEWLINE);
+        writer.flush();
     }
 
 }
