@@ -1,0 +1,35 @@
+<div>
+   <div class="hero-unit">
+      <div class="row-fluid">
+         <div class="span9">
+            <h1><%= name %></h1>
+            <h3><%= id %></h3>
+            <p><%= description %></p>
+            <p>
+               <a href="<%= latestArtifact.downloadUrl %>" class="btn btn-primary btn-large"> Download Latest </a>
+            </p>
+         </div>
+         <div class="span3">
+            <img src="qrcode?url=<%= latestArtifact.downloadUrl %>">
+         </div>
+      </div>
+   </div>
+   <table class="table-striped table artifacts">
+      <thead>
+         <tr>
+            <th>Version</th>
+            <th>Date</th>
+            <th>Download</th>
+         </tr>
+      </thead>
+      <tbody>
+         <% _.each(artifacts, function(artifact) { %>
+         <tr>
+            <td><%= artifact.version %></td>
+            <td><%= artifact.formattedDate %></td>
+            <td><a href="<%= artifact.downloadUrl %>" class="btn btn-primary">Download</a></td>
+         </tr>
+         <% }); %>
+      </tbody>
+   </table>
+</div>

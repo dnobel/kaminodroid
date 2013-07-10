@@ -11,7 +11,5 @@ require.config({
 
 require([ 'backbone', 'router', 'views/AppView' ], function(Backbone,
 		AppRouter, AppView) {
-	new AppRouter();
 	Backbone.history.start();
-	new AppView();
 });

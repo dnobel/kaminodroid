@@ -1,0 +1,14 @@
+.application h3 {
+	margin-top: 0px;
+	color: #333;	
+}
+
+.application .caption {
+	padding-top: 0px;
+}
+
+.application h3, .application p{
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
