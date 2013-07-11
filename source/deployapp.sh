@@ -1,1 +1,1 @@
-mvn -f kaminodroid-api/pom.xml clean install org.kaminodroid:kaminodroid-mojo:kamino -Dkamino.url=http://localhost:8080
+mvn -f kaminodroid-api/pom.xml clean install org.kaminodroid:appdock-mojo:deploy -Dappdock.url=http://localhost:8080

@@ -16,13 +16,13 @@ import org.kaminodroid.api.Application;
 import org.kaminodroid.client.KaminoDroidArtifactUploader;
 import org.kaminodroid.client.KaminoDroidClient;
 
-@Mojo(name = "kamino")
+@Mojo(name = "deploy")
 public class KaminoDroidMojo extends AbstractMojo {
 
     @Component
     private MavenProject mavenProject;
 
-    @Parameter(property = "kamino.url")
+    @Parameter(property = "appdock.url")
     private String url;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -35,7 +35,7 @@ public class KaminoDroidMojo extends AbstractMojo {
             downloadUrl = artifactUploader.uploadFile(getArtifactFile());
         }
         catch (IOException ex) {
-            throw new MojoExecutionException("Could not upload artifact to KaminoDroid: " + ex.getMessage(), ex);
+            throw new MojoExecutionException("Could not upload artifact to AppDock: " + ex.getMessage(), ex);
         }
 
         getLog().info("Uploaded Maven artifact file. Download URL: " + downloadUrl);
@@ -47,16 +47,16 @@ public class KaminoDroidMojo extends AbstractMojo {
         Application application = client.getApplication(applicationId);
 
         if (application == null) {
-            getLog().info("Creating KaminoDroid application: " + applicationId);
+            getLog().info("Creating AppDock application: " + applicationId);
 
             application = new Application();
             application.setId(applicationId);
-			application.setDescription(mavenProject.getDescription());
+            application.setDescription(mavenProject.getDescription());
             application.setName(mavenProject.getName());
             client.createApplication(application);
         }
 
-        getLog().info("Creating KaminoDroid artifact: " + artifact.getVersion());
+        getLog().info("Creating AppDock artifact: " + artifact.getVersion());
 
         org.kaminodroid.api.Artifact kaminoArtifact = new org.kaminodroid.api.Artifact();
         kaminoArtifact.setVersion(artifact.getVersion());
